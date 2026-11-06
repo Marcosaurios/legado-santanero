@@ -1,0 +1,44 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+type Props = HTMLAttributes<'button'> & HTMLAttributes<'a'> & { label?: string }
+const { href, label, class: className, ...rest } = Astro.props
+const Tag = href ? 'a' : 'button'
+---
+
+<Tag href={href} class:list={['Button', className]} {...rest}>
+	<slot />
+	{label && <span class="label">{label}</span>}
+</Tag>
+
+<style lang="scss">
+	@use '../../styles/vars' as *;
+
+	.Button {
+		display: flex;
+		flex-direction: column;
+		align-content: center;
+		justify-content: center;
+		align-items: center;
+		gap: 3px;
+
+		cursor: pointer;
+		padding: 1em;
+
+		// Reset
+		text-decoration: none;
+		color: $fontColor;
+
+		background-color: unset;
+		border: none;
+
+		width: unset;
+		height: unset;
+		font-family: $font;
+		font-size: $fontSize;
+	}
+
+	.label {
+		align-content: center;
+	}
+</style>

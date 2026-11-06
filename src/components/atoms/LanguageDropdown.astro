@@ -1,0 +1,64 @@
+---
+import { LOCALES, type Locale } from '../../i18n'
+
+interface Props {
+	currentLocale: Locale
+	alternates: Record<Locale, string>
+}
+const { currentLocale, alternates } = Astro.props
+---
+
+<div class="dropdown" hidden>
+	{LOCALES.map((lang) => (
+		<a href={alternates[lang]} class:list={{ active: lang === currentLocale }}>
+			{lang.toUpperCase()}
+		</a>
+	))}
+</div>
+
+<style lang="scss">
+	@use '../../styles/vars' as *;
+
+	.dropdown {
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 200;
+		display: flex;
+		flex-direction: column;
+		border-radius: 8px;
+		overflow: hidden;
+		border: 1px solid rgba($fontColor, 0.2);
+		background-color: $bgColor;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+		&[hidden] {
+			display: none;
+		}
+
+		@include desktopView() {
+			bottom: auto;
+			top: 100%;
+		}
+	}
+
+	a {
+		padding: 0.5rem 1.5rem;
+		text-align: center;
+		text-decoration: none;
+		color: $fontColor;
+		font-family: $font;
+		font-size: 0.9rem;
+		transition: background-color 0.1s ease;
+
+		&:hover {
+			background-color: rgba($fontColor, 0.1);
+		}
+
+		&.active {
+			background-color: rgba($fontColor, 0.15);
+			font-weight: 700;
+		}
+	}
+</style>

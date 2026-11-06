@@ -147,3 +147,12 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# EmDash / Wrangler local state
+.wrangler
+.dev.vars
+.dev.vars.*
+.emdash/migrations.json
+data.db
+data.db-*
+uploads

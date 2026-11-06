@@ -1,0 +1,33 @@
+---
+import Category from '../atoms/Category.astro'
+import { categoryUrl, getCategories } from '../../data/recipes'
+import type { Locale } from '../../i18n'
+import type { Recipe } from '../../types'
+
+interface Props {
+	locale: Locale
+	recipes: Recipe[]
+	active?: string
+}
+const { locale, recipes, active } = Astro.props
+---
+
+<ul class="Categories">
+	{getCategories(recipes).map((name) => (
+		<li>
+			<Category name={name} url={categoryUrl(locale, name)} isSelected={active === name} />
+		</li>
+	))}
+</ul>
+
+<style>
+	.Categories {
+		list-style: none;
+		display: flex;
+		gap: 10px;
+		padding: 1rem;
+
+		overflow-x: scroll;
+		overflow-y: hidden;
+	}
+</style>

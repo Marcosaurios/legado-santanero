@@ -1,0 +1,40 @@
+---
+import RecipePreviewList from '../molecules/RecipePreviewList.astro'
+import { t, type Locale } from '../../i18n'
+import type { Recipe } from '../../types'
+
+const { locale, recipes } = Astro.props as { locale: Locale; recipes: Recipe[] }
+---
+
+<div id="search-results" hidden>
+	<RecipePreviewList items={recipes} />
+	<p hidden>{t(locale, 'components.searchList.noResults')}</p>
+</div>
+
+<script>
+	// While there is a search term, results replace the page content (#page-content in Layout)
+	const input = document.querySelector<HTMLInputElement>('#search-input')!
+	const results = document.getElementById('search-results')!
+	const content = document.getElementById('page-content')!
+	const items = results.querySelectorAll<HTMLElement>('li[data-title]')
+	const empty = results.querySelector('p')!
+
+	input.addEventListener('input', () => {
+		const term = input.value.toLowerCase()
+		results.hidden = !term
+		content.hidden = !!term
+		let visible = 0
+		items.forEach((li) => {
+			li.hidden = !li.dataset.title!.includes(term)
+			if (!li.hidden) visible++
+		})
+		empty.hidden = visible > 0
+	})
+</script>
+
+<style>
+	p {
+		text-align: center;
+		margin: 3rem;
+	}
+</style>

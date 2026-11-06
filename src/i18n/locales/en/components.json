@@ -1,0 +1,32 @@
+{
+	"common": {
+		"altText": "Image describing {name}"
+	},
+	"inputBox": {
+		"placeholder": "Looking for a recipe?"
+	},
+	"searchList": {
+		"noResults": "No recipes found with that title"
+	},
+	"recipe": {
+		"ingredients": "Ingredients",
+		"description": "Preparation"
+	},
+	"navbar": {
+		"title": "El legado Santanero",
+		"sections": {
+			"home": "Home",
+			"search": "Search",
+			"language": "Language",
+			"about": "About"
+		}
+	},
+	"error": {
+		"404": "Oops! We couldn't find what you were looking for!"
+	},
+	"templates": {
+		"landingPage": {
+			"lastRecipes": "Latest recipes added"
+		}
+	}
+}

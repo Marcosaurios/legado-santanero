@@ -1,0 +1,420 @@
+{
+	"$schema": "https://emdashcms.com/seed.schema.json",
+	"version": "1",
+	"meta": {
+		"name": "El legado Santanero",
+		"description": "Recipes"
+	},
+	"settings": {
+		"title": "El legado Santanero"
+	},
+	"collections": [
+		{
+			"slug": "recipes",
+			"label": "Recetas",
+			"labelSingular": "Receta",
+			"urlPattern": "/es/receta/{slug}",
+			"supports": ["drafts", "revisions", "preview", "search"],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Título",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "category",
+					"label": "Categorías",
+					"type": "repeater",
+					"required": true,
+					"validation": {
+						"subFields": [
+							{
+								"slug": "name",
+								"type": "string",
+								"label": "Categoría",
+								"required": true
+							}
+						],
+						"minItems": 1
+					}
+				},
+				{
+					"slug": "ingredients",
+					"label": "Ingredientes",
+					"type": "repeater",
+					"required": true,
+					"validation": {
+						"subFields": [
+							{
+								"slug": "name",
+								"type": "string",
+								"label": "Ingrediente",
+								"required": true
+							}
+						],
+						"minItems": 1
+					}
+				},
+				{
+					"slug": "description",
+					"label": "Elaboración",
+					"type": "portableText",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "image_main",
+					"label": "Imagen principal",
+					"type": "image",
+					"translatable": false
+				},
+				{
+					"slug": "images",
+					"label": "Imágenes",
+					"type": "repeater",
+					"translatable": false,
+					"validation": {
+						"subFields": [
+							{
+								"slug": "image",
+								"type": "image",
+								"label": "Imagen"
+							}
+						]
+					}
+				},
+				{
+					"slug": "minutes",
+					"label": "Minutos",
+					"type": "integer",
+					"translatable": false,
+					"validation": {
+						"min": 1
+					}
+				},
+				{
+					"slug": "difficulty",
+					"label": "Dificultad (1-5)",
+					"type": "integer",
+					"translatable": false,
+					"validation": {
+						"min": 1,
+						"max": 5
+					}
+				}
+			]
+		}
+	],
+	"content": {
+		"recipes": [
+			{
+				"id": "tortilla-es",
+				"slug": "tortilla-de-patatas",
+				"status": "published",
+				"locale": "es",
+				"data": {
+					"title": "Tortilla de patatas",
+					"category": [
+						{
+							"name": "principales"
+						}
+					],
+					"ingredients": [
+						{
+							"name": "6 huevos"
+						},
+						{
+							"name": "4 patatas"
+						},
+						{
+							"name": "1 cebolla"
+						},
+						{
+							"name": "Aceite de oliva"
+						},
+						{
+							"name": "Sal"
+						}
+					],
+					"description": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s0",
+									"text": "Pela y corta las patatas y la cebolla en láminas finas.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b3",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Fríelas a fuego lento en abundante aceite hasta que estén tiernas. Escúrrelas, mézclalas con los huevos batidos y sal, y cuaja la tortilla por ambos lados.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"minutes": 45,
+					"difficulty": 2,
+					"image_main": {
+						"$media": {
+							"url": "https://picsum.photos/seed/tortilla/1200/800",
+							"alt": "Tortilla de patatas",
+							"filename": "tortilla.jpg"
+						}
+					}
+				}
+			},
+			{
+				"id": "arroz-es",
+				"slug": "arroz-con-leche",
+				"status": "published",
+				"locale": "es",
+				"data": {
+					"title": "Arroz con leche",
+					"category": [
+						{
+							"name": "postres"
+						}
+					],
+					"ingredients": [
+						{
+							"name": "1 l de leche"
+						},
+						{
+							"name": "100 g de arroz"
+						},
+						{
+							"name": "100 g de azúcar"
+						},
+						{
+							"name": "Piel de limón"
+						},
+						{
+							"name": "Canela"
+						}
+					],
+					"description": [
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s4",
+									"text": "Cuece la leche con la piel de limón y la canela.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Añade el arroz y remueve a fuego lento durante ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s7",
+									"text": "50 minutos",
+									"marks": ["strong"]
+								},
+								{
+									"_type": "span",
+									"_key": "s8",
+									"text": ". Agrega el azúcar al final y deja enfriar.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"minutes": 70,
+					"difficulty": 1,
+					"image_main": {
+						"$media": {
+							"url": "https://picsum.photos/seed/arroz/1200/800",
+							"alt": "Arroz con leche",
+							"filename": "arroz.jpg"
+						}
+					}
+				}
+			},
+			{
+				"id": "tortilla-en",
+				"slug": "spanish-omelette",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Spanish omelette",
+					"category": [
+						{
+							"name": "mains"
+						}
+					],
+					"ingredients": [
+						{
+							"name": "6 eggs"
+						},
+						{
+							"name": "4 potatoes"
+						},
+						{
+							"name": "1 onion"
+						},
+						{
+							"name": "Olive oil"
+						},
+						{
+							"name": "Salt"
+						}
+					],
+					"description": [
+						{
+							"_type": "block",
+							"_key": "b11",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "Peel and thinly slice the potatoes and the onion.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s12",
+									"text": "Fry them slowly in plenty of oil until tender. Drain, mix with the beaten eggs and salt, and cook the omelette on both sides.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"minutes": 45,
+					"difficulty": 2,
+					"image_main": {
+						"$media": {
+							"url": "https://picsum.photos/seed/tortilla/1200/800",
+							"alt": "Tortilla de patatas",
+							"filename": "tortilla.jpg"
+						}
+					}
+				},
+				"translationOf": "tortilla-es"
+			},
+			{
+				"id": "arroz-en",
+				"slug": "rice-pudding",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Rice pudding",
+					"category": [
+						{
+							"name": "desserts"
+						}
+					],
+					"ingredients": [
+						{
+							"name": "1 l milk"
+						},
+						{
+							"name": "100 g rice"
+						},
+						{
+							"name": "100 g sugar"
+						},
+						{
+							"name": "Lemon peel"
+						},
+						{
+							"name": "Cinnamon"
+						}
+					],
+					"description": [
+						{
+							"_type": "block",
+							"_key": "b15",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s14",
+									"text": "Heat the milk with the lemon peel and cinnamon.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s16",
+									"text": "Add the rice and stir over low heat for ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s17",
+									"text": "50 minutes",
+									"marks": ["strong"]
+								},
+								{
+									"_type": "span",
+									"_key": "s18",
+									"text": ". Add the sugar at the end and let it cool.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"minutes": 70,
+					"difficulty": 1,
+					"image_main": {
+						"$media": {
+							"url": "https://picsum.photos/seed/arroz/1200/800",
+							"alt": "Arroz con leche",
+							"filename": "arroz.jpg"
+						}
+					}
+				},
+				"translationOf": "arroz-es"
+			}
+		]
+	}
+}

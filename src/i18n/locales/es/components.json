@@ -1,0 +1,32 @@
+{
+	"common": {
+		"altText": "Imagen describiendo {name}"
+	},
+	"inputBox": {
+		"placeholder": "¿Buscas alguna receta?"
+	},
+	"searchList": {
+		"noResults": "No hay recetas con ese título"
+	},
+	"recipe": {
+		"ingredients": "Ingredientes",
+		"description": "Elaboración"
+	},
+	"navbar": {
+		"title": "El legado Santanero",
+		"sections": {
+			"home": "Inicio",
+			"search": "Buscar",
+			"language": "Idioma",
+			"about": "Nosotros"
+		}
+	},
+	"error": {
+		"404": "Ups! No hemos encontrado eso que andas buscando!"
+	},
+	"templates": {
+		"landingPage": {
+			"lastRecipes": "Últimas recetas añadidas"
+		}
+	}
+}

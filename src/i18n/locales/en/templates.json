@@ -1,0 +1,11 @@
+{
+	"landing": {
+		"title": "El legado santanero",
+		"lastRecipe": "Latest recipes added",
+		"categories": "Categories"
+	},
+	"category": {
+		"title": "Category"
+	},
+	"imageAlt": "Preview image of {name}"
+}

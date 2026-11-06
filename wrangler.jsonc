@@ -1,0 +1,15 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "legado-santanero",
+	"main": "./src/worker.ts",
+	"compatibility_date": "2026-11-01",
+	"compatibility_flags": ["nodejs_compat"],
+	// Recipes and admin data
+	"d1_databases": [{ "binding": "DB", "database_name": "legado-santanero" }],
+	// Uploaded images
+	"r2_buckets": [{ "binding": "MEDIA", "bucket_name": "legado-santanero-media" }],
+	// Sandboxed plugins need Worker Loader (Workers paid plan). Uncomment to enable:
+	// "worker_loaders": [{ "binding": "LOADER" }],
+	// EmDash maintenance and scheduled publishing
+	"triggers": { "crons": ["* * * * *"] }
+}

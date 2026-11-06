@@ -1,0 +1,109 @@
+---
+import { PortableText } from 'emdash/ui'
+import type { Recipe } from '../../types'
+import { t, type Locale } from '../../i18n'
+
+interface Props {
+	recipe: Recipe
+	locale: Locale
+}
+const { recipe, locale } = Astro.props
+---
+
+<h1>{recipe.title}</h1>
+<hr />
+
+<h2>{t(locale, 'components.recipe.ingredients')}</h2>
+<div class="ingredients">
+	{recipe.ingredients.map((ingredient) => (
+		<label class="ingredient">
+			<input type="checkbox" />
+			<span>{ingredient}</span>
+		</label>
+	))}
+</div>
+
+<h2>{t(locale, 'components.recipe.description')}</h2>
+<div class="md">
+	<PortableText value={recipe.description} />
+</div>
+
+<style lang="scss">
+	@use '../../styles/vars' as *;
+
+	.ingredients {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.35rem;
+
+		@include desktopView() {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	.ingredient {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.45rem 0.65rem;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: background-color 0.15s ease;
+
+		&:hover {
+			background-color: rgba($fontColor, 0.06);
+		}
+	}
+
+	input[type='checkbox'] {
+		appearance: none;
+		flex-shrink: 0;
+		margin: 0;
+		width: 1.1rem;
+		height: 1.1rem;
+		border: 1.5px solid rgba($fontColor, 0.35);
+		border-radius: 4px;
+		cursor: pointer;
+		position: relative;
+		transition:
+			background-color 0.15s ease,
+			border-color 0.15s ease;
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4l3 3 5-6' stroke='%23eae0d5' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 65%;
+			opacity: 0;
+			transition: opacity 0.15s ease;
+		}
+
+		&:checked {
+			background-color: rgba($fontColor, 0.15);
+			border-color: rgba($fontColor, 0.5);
+
+			&::after {
+				opacity: 1;
+			}
+		}
+	}
+
+	span {
+		transition:
+			opacity 0.2s ease,
+			text-decoration 0.2s ease;
+	}
+
+	input:checked + span {
+		text-decoration: line-through;
+		opacity: 0.4;
+	}
+
+	.md :global(p) {
+		text-align: justify;
+		word-spacing: -1px;
+	}
+</style>

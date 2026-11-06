@@ -1,0 +1,88 @@
+---
+import Clock from '~icons/fa7-solid/clock'
+import type { Recipe } from '../../types'
+import { formatDuration } from '../utils'
+
+interface Props {
+	type?: 'small' | 'expanded'
+	recipe: Recipe
+}
+const { type = 'small', recipe } = Astro.props
+const expanded = type === 'expanded'
+---
+
+<div class="RecipePreview">
+	<a
+		href={recipe.url}
+		class:list={['link', { expanded }]}
+		style={`background-image: url("${recipe.imageMain}")`}
+	>
+		<span class:list={['title', { expanded }]}>{recipe.title}</span>
+
+		<span class:list={['extra', { expanded }]}>
+			<Clock />
+			<span>{recipe.minutes && formatDuration(recipe.minutes)}</span>
+		</span>
+	</a>
+</div>
+
+<style lang="scss">
+	@use '../../styles/vars' as *;
+
+	.RecipePreview {
+		border-radius: 10px;
+		padding-top: 15px;
+
+		a.link {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			border-radius: 10px;
+			height: 140px;
+
+			text-decoration: none;
+
+			background-size: cover;
+			background-position: center;
+
+			filter: saturate(0.8);
+
+			transition: all 0.3s ease-in-out;
+
+			&:hover {
+				filter: initial;
+				transform: scale(1.05);
+			}
+
+			&.expanded {
+				align-items: flex-start;
+				justify-content: flex-start;
+				height: 16rem;
+			}
+
+			.title {
+				font-size: 1.5rem;
+				color: $fontColor;
+				flex-grow: 1;
+				padding-left: 1rem;
+
+				&.expanded {
+					padding: 1rem;
+				}
+			}
+
+			.extra {
+				display: flex;
+				align-items: center;
+
+				width: 8rem;
+				color: $fontColor;
+				filter: grayscale(0.3);
+
+				span {
+					margin-left: 5px;
+				}
+			}
+		}
+	}
+</style>

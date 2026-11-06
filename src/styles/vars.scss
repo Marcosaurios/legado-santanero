@@ -1,0 +1,23 @@
+$font: 'Lora', system-ui;
+$fontSize: 18px;
+
+$bgColor: #0a0908;
+$fontColor: #eae0d5;
+
+// Sizings
+$breakpoint-tablet: 685px;
+
+// Media queries
+@mixin desktopView() {
+	@media screen and (min-width: $breakpoint-tablet) {
+		@content;
+	}
+}
+
+@mixin darken {
+	filter: brightness(0.6);
+}
+
+@mixin undarken {
+	filter: brightness(1);
+}

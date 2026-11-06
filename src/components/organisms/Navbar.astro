@@ -1,0 +1,170 @@
+---
+import House from '~icons/fa7-solid/house'
+import Users from '~icons/fa7-solid/users'
+import Language from '~icons/fa7-solid/language'
+import SearchIcon from '~icons/fa7-solid/magnifying-glass'
+import Button from '../atoms/Button.astro'
+import InputBox from '../atoms/InputBox.astro'
+import LanguageDropdown from '../atoms/LanguageDropdown.astro'
+import { t, type Locale } from '../../i18n'
+
+interface Props {
+	locale: Locale
+	alternates: Record<Locale, string>
+}
+const { locale, alternates } = Astro.props
+const label = (section: string) => t(locale, `components.navbar.sections.${section}`)
+---
+
+<nav>
+	<a class="title" href={`/${locale}`}>
+		<h1>{t(locale, 'components.navbar.title')}</h1>
+	</a>
+	<div class="sections">
+		<Button href={`/${locale}`} label={label('home')} class="home">
+			<span class="icon">
+				<House />
+			</span>
+		</Button>
+		<Button href={`/${locale}/about`} label={label('about')} class="about">
+			<span class="icon">
+				<Users />
+			</span>
+		</Button>
+		<span class="languageWrapper">
+			<LanguageDropdown currentLocale={locale} alternates={alternates} />
+			<Button label={label('language')} class="language">
+				<span class="icon">
+					<Language />
+				</span>
+			</Button>
+		</span>
+		<Button label={label('search')} class="search">
+			<span class="icon">
+				<SearchIcon />
+			</span>
+		</Button>
+
+		<span class="item desktopSearch">
+			<InputBox id="search-input" placeholder={t(locale, 'components.inputBox.placeholder')} />
+		</span>
+	</div>
+</nav>
+
+<script>
+	const nav = document.querySelector('nav')!
+	const dropdown = nav.querySelector<HTMLElement>('.dropdown')!
+	const languageButton = nav.querySelector('.Button.language')!
+	const searchBar = nav.querySelector('.desktopSearch')!
+	const searchButton = nav.querySelector('.Button.search')!
+
+	languageButton.addEventListener('click', () => (dropdown.hidden = !dropdown.hidden))
+	// Mobile: show/hide the searchbar when touching the search icon
+	searchButton.addEventListener('click', () => searchBar.classList.toggle('enabled'))
+
+	// Click outside closes the dropdown and the mobile searchbar
+	document.addEventListener('click', (e) => {
+		const target = e.target as Node
+		if (!dropdown.contains(target) && !languageButton.contains(target)) dropdown.hidden = true
+		if (!searchBar.contains(target) && !searchButton.contains(target))
+			searchBar.classList.remove('enabled')
+	})
+</script>
+
+<style lang="scss">
+	@use '../../styles/vars' as *;
+
+	nav {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		z-index: 100;
+	}
+
+	.title {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 100;
+		background-color: $bgColor;
+		text-decoration: none;
+		color: $fontColor;
+	}
+
+	.sections {
+		width: 100%;
+
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		background-color: $bgColor;
+	}
+
+	.languageWrapper {
+		position: relative;
+	}
+
+	h1 {
+		text-align: center;
+		margin: 0;
+		padding: 1rem;
+	}
+
+	.desktopSearch {
+		position: absolute;
+		bottom: 100%;
+		width: 100%;
+		height: 50px;
+
+		transition: clip-path ease-in-out 0.2s;
+		will-change: clip-path;
+		clip-path: inset(100% 0 0 0);
+
+		&.enabled {
+			clip-path: inset(0 0 0 0);
+		}
+	}
+
+	@include desktopView() {
+		nav {
+			position: relative;
+			bottom: auto;
+			left: auto;
+			display: flex;
+			height: fit-content;
+		}
+
+		.title {
+			position: relative;
+			top: auto;
+			left: auto;
+			width: auto;
+			background-color: transparent;
+			flex: 1;
+		}
+
+		.sections {
+			flex: 1;
+			position: relative;
+			align-items: center;
+			flex-wrap: nowrap;
+			gap: 10px;
+		}
+
+		.icon,
+		.sections :global(.Button.search) {
+			display: none;
+		}
+
+		.desktopSearch,
+		.desktopSearch.enabled {
+			position: relative;
+			bottom: initial;
+			transform: none;
+			order: initial;
+			clip-path: inset(0 0 0 0);
+		}
+	}
+</style>

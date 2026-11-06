@@ -1,0 +1,11 @@
+---
+import RecipePreview from '../molecules/RecipePreview.astro'
+import { t, type Locale } from '../../i18n'
+import type { Recipe } from '../../types'
+
+const { locale, recipes } = Astro.props as { locale: Locale; recipes: Recipe[] }
+const lastRecipe = recipes.at(-1)
+---
+
+<div>{t(locale, 'components.templates.landingPage.lastRecipes')}</div>
+{lastRecipe && <RecipePreview recipe={lastRecipe} type="expanded" />}

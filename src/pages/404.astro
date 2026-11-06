@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Error from '../components/atoms/Error.astro'
+import { DEFAULT_LOCALE } from '../i18n'
+import { alternates, getRecipes } from '../data/recipes'
+
+Astro.response.status = 404
+const recipes = await getRecipes(DEFAULT_LOCALE)
+---
+
+<Layout locale={DEFAULT_LOCALE} recipes={recipes} alternates={alternates(() => undefined)}>
+	<Error locale={DEFAULT_LOCALE} />
+</Layout>

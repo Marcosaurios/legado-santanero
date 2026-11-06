@@ -1,0 +1,35 @@
+---
+import type { Recipe } from '../../types'
+import RecipePreview from './RecipePreview.astro'
+
+interface Props {
+	items: Recipe[]
+}
+const { items } = Astro.props
+---
+
+<ul class="recipes">
+	{items.map((recipe) => (
+		<li data-title={recipe.title.toLowerCase()}>
+			<RecipePreview recipe={recipe} />
+		</li>
+	))}
+</ul>
+
+<style>
+	ul {
+		list-style: none;
+
+		margin: inherit;
+		padding: inherit;
+	}
+
+	li {
+		list-style: none;
+		margin: 1rem 0;
+	}
+
+	li:last-child {
+		margin-bottom: 0;
+	}
+</style>

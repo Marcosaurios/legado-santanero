@@ -1,0 +1,58 @@
+---
+// Every localised page, rendered per request from EmDash:
+//   /es, /es/receta/:slug, /es/categoria/:name and the /en equivalents
+import Layout from '../layouts/Layout.astro'
+import Recipe from '../components/molecules/Recipe.astro'
+import RecipesCategory from '../components/templates/RecipesCategory.astro'
+import LandingPage from '../components/templates/LandingPage.astro'
+import { LOCALES, type Locale } from '../i18n'
+import {
+	alternates,
+	categoryAlternates,
+	categorySegment,
+	getAllRecipes,
+	recipeAlternates,
+	recipeSegment
+} from '../data/recipes'
+
+const [locale, segment, slug, ...rest] = (Astro.params.path ?? '').split('/') as [
+	Locale,
+	...string[]
+]
+if (!LOCALES.includes(locale) || rest.length || (segment && !slug)) return Astro.rewrite('/404')
+
+const all = await getAllRecipes()
+const recipes = all[locale]
+
+const recipe = segment === recipeSegment(locale) ? recipes.find((r) => r.slug === slug) : undefined
+const category = segment === categorySegment(locale) ? slug : undefined
+const items = category ? recipes.filter((r) => r.category.includes(category)) : []
+
+if (segment && !recipe && !items.length) return Astro.rewrite('/404')
+---
+
+{recipe ? (
+	<Layout
+		locale={locale}
+		recipes={recipes}
+		alternates={recipeAlternates(all, recipe)}
+		title={recipe.title}
+		activeCategory={recipe.category[0]}
+	>
+		<Recipe recipe={recipe} locale={locale} />
+	</Layout>
+) : category ? (
+	<Layout
+		locale={locale}
+		recipes={recipes}
+		alternates={categoryAlternates(all, locale, category)}
+		title={category}
+		activeCategory={category}
+	>
+		<RecipesCategory locale={locale} category={category} items={items} />
+	</Layout>
+) : (
+	<Layout locale={locale} recipes={recipes} alternates={alternates(() => undefined)}>
+		<LandingPage locale={locale} recipes={recipes} />
+	</Layout>
+)}

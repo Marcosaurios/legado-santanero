@@ -1,0 +1,42 @@
+---
+interface Props {
+	name: string
+	url: string
+	isSelected: boolean
+}
+const { name, url, isSelected } = Astro.props
+---
+
+<a href={url} class:list={['item', { isSelected }]}>
+	{name.toUpperCase()}
+</a>
+
+<style lang="scss">
+	@use '../../styles/vars' as *;
+
+	.item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		padding: 0.25rem 1rem;
+
+		border: 1px solid white;
+		border-radius: 10px;
+
+		text-decoration: none;
+		color: $fontColor;
+		@include darken;
+
+		transition: filter 200ms linear;
+
+		&:hover {
+			@include undarken;
+		}
+
+		&.isSelected {
+			background-color: $fontColor;
+			color: $bgColor;
+		}
+	}
+</style>
