@@ -1,4 +1,4 @@
-import type { PortableTextBlock } from 'emdash'
+import type { MediaValue, PortableTextBlock } from 'emdash'
 
 export type Recipe = {
 	title: string
@@ -6,8 +6,9 @@ export type Recipe = {
 	category: string[]
 	ingredients: string[]
 	description: PortableTextBlock[]
-	imageMain?: string
-	images?: string[]
+	/** Raw EmDash media, render with `Image` from 'emdash/ui' (it resolves local/R2 URLs) */
+	imageMain?: MediaValue
+	images?: MediaValue[]
 	minutes?: number
 	difficulty?: number
 	updatedAt: string

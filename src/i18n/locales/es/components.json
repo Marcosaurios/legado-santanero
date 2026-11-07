@@ -10,7 +10,8 @@
 	},
 	"recipe": {
 		"ingredients": "Ingredientes",
-		"description": "Elaboración"
+		"description": "Elaboración",
+		"related": "Más recetas como esta"
 	},
 	"navbar": {
 		"title": "El legado Santanero",

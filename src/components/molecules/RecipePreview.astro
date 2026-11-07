@@ -1,25 +1,21 @@
 ---
+import { Image } from 'emdash/ui'
 import Clock from '~icons/fa7-solid/clock'
 import type { Recipe } from '../../types'
 import { formatDuration } from '../utils'
 
 interface Props {
-	type?: 'small' | 'expanded'
 	recipe: Recipe
 }
-const { type = 'small', recipe } = Astro.props
-const expanded = type === 'expanded'
+const { recipe } = Astro.props
 ---
 
 <div class="RecipePreview">
-	<a
-		href={recipe.url}
-		class:list={['link', { expanded }]}
-		style={`background-image: url("${recipe.imageMain}")`}
-	>
-		<span class:list={['title', { expanded }]}>{recipe.title}</span>
+	<a href={recipe.url} class="link">
+		<Image image={recipe.imageMain} alt="" />
+		<span class="title">{recipe.title}</span>
 
-		<span class:list={['extra', { expanded }]}>
+		<span class="extra">
 			<Clock />
 			<span>{recipe.minutes && formatDuration(recipe.minutes)}</span>
 		</span>
@@ -30,59 +26,70 @@ const expanded = type === 'expanded'
 	@use '../../styles/vars' as *;
 
 	.RecipePreview {
-		border-radius: 10px;
 		padding-top: 15px;
+	}
 
-		a.link {
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			border-radius: 10px;
-			height: 140px;
+	.link {
+		display: flex;
+		align-items: center;
+		height: 140px;
+		@include desktopView() {
+			height: 16rem;
+		}
+		border-radius: 10px;
 
-			text-decoration: none;
+		// The image fills the card behind the text and zooms inside its rounded box
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
 
-			background-size: cover;
-			background-position: center;
+		// Inherited by the title and duration. line-height 1 so the text centers on the
+		// card's middle (the global line-height is shorter than the title on mobile)
+		color: $fontColor;
+		line-height: 1;
+		text-decoration: none;
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); // readable on light photos
 
-			filter: saturate(0.8);
+		filter: saturate(0.8);
+		transition: 0.3s ease-in-out;
 
-			transition: all 0.3s ease-in-out;
+		&:hover {
+			filter: none;
+			transform: scale(1.02);
+		}
+	}
 
-			&:hover {
-				filter: initial;
-				transform: scale(1.05);
-			}
+	// Rendered by EmDash's Image (child component), hence :global
+	.link :global(img) {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.3s ease-in-out;
+	}
 
-			&.expanded {
-				align-items: flex-start;
-				justify-content: flex-start;
-				height: 16rem;
-			}
+	.link:hover :global(img) {
+		transform: scale(1.1);
+	}
 
-			.title {
-				font-size: 1.5rem;
-				color: $fontColor;
-				flex-grow: 1;
-				padding-left: 1rem;
+	.title {
+		flex-grow: 1;
+		padding-left: 1rem;
+		font-size: 1.5rem;
+	}
 
-				&.expanded {
-					padding: 1rem;
-				}
-			}
+	.extra {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		width: 8rem;
+		filter: grayscale(0.3);
 
-			.extra {
-				display: flex;
-				align-items: center;
-
-				width: 8rem;
-				color: $fontColor;
-				filter: grayscale(0.3);
-
-				span {
-					margin-left: 5px;
-				}
-			}
+		:global(svg) {
+			display: block;
+			filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6)); // text-shadow skips SVGs
 		}
 	}
 </style>

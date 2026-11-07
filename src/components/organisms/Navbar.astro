@@ -101,8 +101,6 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 	}
 
 	.sections {
-		width: 100%;
-
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-around;
@@ -125,36 +123,30 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 		width: 100%;
 		height: 50px;
 
-		transition: clip-path ease-in-out 0.2s;
-		will-change: clip-path;
+		// Mobile: slides up from the bottom bar when toggled
 		clip-path: inset(100% 0 0 0);
+		transition: clip-path 0.2s ease-in-out;
 
 		&.enabled {
-			clip-path: inset(0 0 0 0);
+			clip-path: inset(0);
 		}
 	}
 
 	@include desktopView() {
+		// Desktop: one static row, title on the left and sections on the right
 		nav {
-			position: relative;
-			bottom: auto;
-			left: auto;
+			position: static;
 			display: flex;
-			height: fit-content;
 		}
 
 		.title {
-			position: relative;
-			top: auto;
-			left: auto;
+			position: static;
 			width: auto;
-			background-color: transparent;
 			flex: 1;
 		}
 
 		.sections {
 			flex: 1;
-			position: relative;
 			align-items: center;
 			flex-wrap: nowrap;
 			gap: 10px;
@@ -165,13 +157,9 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 			display: none;
 		}
 
-		.desktopSearch,
-		.desktopSearch.enabled {
-			position: relative;
-			bottom: initial;
-			transform: none;
-			order: initial;
-			clip-path: inset(0 0 0 0);
+		.desktopSearch {
+			position: static;
+			clip-path: none;
 		}
 	}
 </style>

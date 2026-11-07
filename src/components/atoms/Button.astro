@@ -17,28 +17,18 @@ const Tag = href ? 'a' : 'button'
 	.Button {
 		display: flex;
 		flex-direction: column;
-		align-content: center;
-		justify-content: center;
 		align-items: center;
+		justify-content: center;
 		gap: 3px;
-
-		cursor: pointer;
 		padding: 1em;
+		cursor: pointer;
 
-		// Reset
-		text-decoration: none;
+		// Reset <a>/<button> defaults
 		color: $fontColor;
-
-		background-color: unset;
+		text-decoration: none;
+		background: none;
 		border: none;
-
-		width: unset;
-		height: unset;
 		font-family: $font;
 		font-size: $fontSize;
-	}
-
-	.label {
-		align-content: center;
 	}
 </style>

@@ -13,11 +13,3 @@ $breakpoint-tablet: 685px;
 		@content;
 	}
 }
-
-@mixin darken {
-	filter: brightness(0.6);
-}
-
-@mixin undarken {
-	filter: brightness(1);
-}

@@ -20,10 +20,7 @@ const { focusOnReveal, ...rest } = Astro.props
 <style lang="scss">
 	@use '../../styles/vars' as *;
 
-	$border: 2px;
 	.InputBox {
-		box-sizing: border-box;
-		position: relative;
 		padding: 4px;
 
 		input {
@@ -36,14 +33,11 @@ const { focusOnReveal, ...rest } = Astro.props
 			font-style: italic;
 			font-size: 1rem;
 			text-indent: 16px;
-			// CSS reset
 			outline: none;
+			border: 2px solid $fontColor;
 
-			border: $border solid $fontColor;
-
-			background: linear-gradient(to left, transparent 50%, $fontColor 50%) right;
-			background-size: 210%;
-			background-color: transparent;
+			// Light fill slides in from the left on focus
+			background: linear-gradient(to left, transparent 50%, $fontColor 50%) right / 210%;
 			transition: 0.15s cubic-bezier(0.165, 0.84, 0.44, 1);
 			&:focus {
 				background-position: left;

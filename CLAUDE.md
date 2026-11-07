@@ -53,7 +53,7 @@ Each page computes `alternates: Record<Locale, string>` (its equivalent URL per 
 
 ### Styling
 
-`src/styles/vars.scss` (variables + mixins `desktopView`, `darken`, `undarken`) and `global.scss`. Component styles are scoped `<style lang="scss">`; `scopedStyleStrategy: 'class'` keeps them above the global `a:link` rules.
+`src/styles/vars.scss` (variables + mixin `desktopView`) and `global.scss`. Component styles are scoped `<style lang="scss">`; `scopedStyleStrategy: 'class'` keeps them above the global `a:link` rules.
 
 ### i18n
 

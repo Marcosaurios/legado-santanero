@@ -9,7 +9,13 @@
 		{ "pattern": "www.legadosantanero.es", "custom_domain": true }
 	],
 	// Recipes and admin data
-	"d1_databases": [{ "binding": "DB", "database_name": "legado-santanero" }],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "legado-santanero",
+			"database_id": "a8420fb9-4f00-488f-9841-9ca136c3475a"
+		}
+	],
 	// Uploaded images
 	"r2_buckets": [{ "binding": "MEDIA", "bucket_name": "legado-santanero-media" }],
 	// Sandboxed plugins need Worker Loader (Workers paid plan). Uncomment to enable:

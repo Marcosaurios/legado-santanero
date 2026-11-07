@@ -15,10 +15,7 @@ const { name, url, isSelected } = Astro.props
 	@use '../../styles/vars' as *;
 
 	.item {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-
+		display: block;
 		padding: 0.25rem 1rem;
 
 		border: 1px solid white;
@@ -26,12 +23,11 @@ const { name, url, isSelected } = Astro.props
 
 		text-decoration: none;
 		color: $fontColor;
-		@include darken;
-
+		filter: brightness(0.6);
 		transition: filter 200ms linear;
 
 		&:hover {
-			@include undarken;
+			filter: none;
 		}
 
 		&.isSelected {

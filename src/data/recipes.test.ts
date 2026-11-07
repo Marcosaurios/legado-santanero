@@ -27,8 +27,8 @@ describe('toRecipe', () => {
 			url: '/es/receta/arroz-con-leche',
 			category: ['postres', 'dulces caseros'],
 			ingredients: ['Leche', 'Arroz'],
-			imageMain: '/_emdash/api/media/file/m1',
-			images: ['/m2.jpg'],
+			imageMain: { id: 'm1', src: '/_emdash/api/media/file/m1' },
+			images: [{ id: 'm2', src: '/m2.jpg' }],
 			createdAt: '2024-03-05T10:00:00.000Z',
 			translationGroup: 'g1'
 		})

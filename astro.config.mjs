@@ -16,7 +16,12 @@ export default defineConfig({
 		react(),
 		emdash({
 			database: d1({ binding: 'DB', session: 'auto', coalesce: true }),
-			storage: r2({ binding: 'MEDIA' })
+			storage: r2({ binding: 'MEDIA' }),
+			// siteUrl and allowedOrigins are tight to passkeys, keep these. In a hostname migration, it will be a different story
+			...(!process.argv.includes('dev') && {
+				siteUrl: 'https://legadosantanero.es',
+				allowedOrigins: ['https://www.legadosantanero.es']
+			})
 		})
 	],
 	// Anything loaded at the root is Spanish

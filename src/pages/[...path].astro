@@ -3,9 +3,10 @@
 //   /es, /es/receta/:slug, /es/categoria/:name and the /en equivalents
 import Layout from '../layouts/Layout.astro'
 import Recipe from '../components/molecules/Recipe.astro'
+import RecipePreviewList from '../components/molecules/RecipePreviewList.astro'
 import RecipesCategory from '../components/templates/RecipesCategory.astro'
 import LandingPage from '../components/templates/LandingPage.astro'
-import { LOCALES, type Locale } from '../i18n'
+import { LOCALES, t, type Locale } from '../i18n'
 import {
 	alternates,
 	categoryAlternates,
@@ -25,6 +26,12 @@ const all = await getAllRecipes()
 const recipes = all[locale]
 
 const recipe = segment === recipeSegment(locale) ? recipes.find((r) => r.slug === slug) : undefined
+// ponytail: first 3 sharing any category; add ranking/shuffle if the catalogue grows
+const related = recipe
+	? recipes
+			.filter((r) => r !== recipe && r.category.some((c) => recipe.category.includes(c)))
+			.slice(0, 3)
+	: []
 const category = segment === categorySegment(locale) ? slug : undefined
 const items = category ? recipes.filter((r) => r.category.includes(category)) : []
 
@@ -40,6 +47,12 @@ if (segment && !recipe && !items.length) return Astro.rewrite('/404')
 		activeCategory={recipe.category[0]}
 	>
 		<Recipe recipe={recipe} locale={locale} />
+		{related.length > 0 && (
+			<>
+				<h2>{t(locale, 'components.recipe.related')}</h2>
+				<RecipePreviewList items={related} />
+			</>
+		)}
 	</Layout>
 ) : category ? (
 	<Layout

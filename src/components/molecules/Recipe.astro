@@ -33,7 +33,6 @@ const { recipe, locale } = Astro.props
 
 	.ingredients {
 		display: grid;
-		grid-template-columns: 1fr;
 		gap: 0.35rem;
 
 		@include desktopView() {
@@ -65,20 +64,16 @@ const { recipe, locale } = Astro.props
 		border-radius: 4px;
 		cursor: pointer;
 		position: relative;
-		transition:
-			background-color 0.15s ease,
-			border-color 0.15s ease;
+		transition: 0.15s;
 
 		&::after {
 			content: '';
 			position: absolute;
 			inset: 0;
-			background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4l3 3 5-6' stroke='%23eae0d5' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-			background-repeat: no-repeat;
-			background-position: center;
-			background-size: 65%;
+			background: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4l3 3 5-6' stroke='%23eae0d5' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+				center / 65% no-repeat;
 			opacity: 0;
-			transition: opacity 0.15s ease;
+			transition: opacity 0.15s;
 		}
 
 		&:checked {
@@ -92,9 +87,7 @@ const { recipe, locale } = Astro.props
 	}
 
 	span {
-		transition:
-			opacity 0.2s ease,
-			text-decoration 0.2s ease;
+		transition: opacity 0.2s; // text-decoration can't animate
 	}
 
 	input:checked + span {
