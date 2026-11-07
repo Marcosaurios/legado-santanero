@@ -46,7 +46,11 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 		</Button>
 
 		<span class="item desktopSearch">
-			<InputBox id="search-input" placeholder={t(locale, 'components.inputBox.placeholder')} />
+			<InputBox
+				id="search-input"
+				placeholder={t(locale, 'components.inputBox.placeholder')}
+				focusOnReveal
+			/>
 		</span>
 	</div>
 </nav>
@@ -60,7 +64,10 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 
 	languageButton.addEventListener('click', () => (dropdown.hidden = !dropdown.hidden))
 	// Mobile: show/hide the searchbar when touching the search icon
-	searchButton.addEventListener('click', () => searchBar.classList.toggle('enabled'))
+	searchButton.addEventListener('click', () => {
+		const shown = searchBar.classList.toggle('enabled')
+		if (shown) searchBar.querySelector<HTMLInputElement>('input[data-focus-on-reveal]')?.focus()
+	})
 
 	// Click outside closes the dropdown and the mobile searchbar
 	document.addEventListener('click', (e) => {

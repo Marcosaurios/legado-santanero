@@ -1,11 +1,20 @@
 ---
 import type { HTMLAttributes } from 'astro/types'
 
-type Props = HTMLAttributes<'input'>
+type Props = HTMLAttributes<'input'> & {
+	/** Focus the input when the component that hides it reveals it (see Navbar's mobile search) */
+	focusOnReveal?: boolean
+}
+const { focusOnReveal, ...rest } = Astro.props
 ---
 
 <div class="InputBox">
-	<input type="text" autocomplete="off" {...Astro.props} />
+	<input
+		type="text"
+		autocomplete="off"
+		data-focus-on-reveal={focusOnReveal ? '' : undefined}
+		{...rest}
+	/>
 </div>
 
 <style lang="scss">
