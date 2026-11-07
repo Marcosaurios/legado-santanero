@@ -4,6 +4,10 @@
 	"main": "./src/worker.ts",
 	"compatibility_date": "2026-11-01",
 	"compatibility_flags": ["nodejs_compat"],
+	"routes": [
+		{ "pattern": "legadosantanero.es", "custom_domain": true },
+		{ "pattern": "www.legadosantanero.es", "custom_domain": true }
+	],
 	// Recipes and admin data
 	"d1_databases": [{ "binding": "DB", "database_name": "legado-santanero" }],
 	// Uploaded images
