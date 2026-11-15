@@ -195,6 +195,7 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 			gap: 10px;
 			visibility: visible;
 			transition: none;
+			overflow: visible; // the language dropdown hangs below the bar
 
 			:global(.Button) {
 				flex-direction: column;
