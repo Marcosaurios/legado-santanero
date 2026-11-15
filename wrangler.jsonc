@@ -4,6 +4,7 @@
 	"main": "./src/worker.ts",
 	"compatibility_date": "2026-11-01",
 	"compatibility_flags": ["nodejs_compat"],
+	"preview_urls": true,
 	"routes": [
 		{ "pattern": "legadosantanero.es", "custom_domain": true, "previews_enabled": true },
 		{ "pattern": "www.legadosantanero.es", "custom_domain": true }
