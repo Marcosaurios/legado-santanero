@@ -20,6 +20,19 @@
 	"r2_buckets": [{ "binding": "MEDIA", "bucket_name": "legado-santanero-media" }],
 	// Astro sessions (EmDash admin login)
 	"kv_namespaces": [{ "binding": "SESSION", "id": "c2d0a156ab4c474f8675cb5ca528d03b" }],
+	// Preview deployments (non-main branches) don't inherit bindings: redeclare them.
+	// ponytail: previews share production data; give them their own D1/R2/KV if that becomes a risk
+	"previews": {
+		"d1_databases": [
+			{
+				"binding": "DB",
+				"database_name": "legado-santanero",
+				"database_id": "a8420fb9-4f00-488f-9841-9ca136c3475a"
+			}
+		],
+		"r2_buckets": [{ "binding": "MEDIA", "bucket_name": "legado-santanero-media" }],
+		"kv_namespaces": [{ "binding": "SESSION", "id": "c2d0a156ab4c474f8675cb5ca528d03b" }]
+	},
 	// Sandboxed plugins need Worker Loader (Workers paid plan). Uncomment to enable:
 	// "worker_loaders": [{ "binding": "LOADER" }],
 	// EmDash maintenance and scheduled publishing
