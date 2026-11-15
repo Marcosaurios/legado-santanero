@@ -5,7 +5,7 @@
 	"compatibility_date": "2026-11-01",
 	"compatibility_flags": ["nodejs_compat"],
 	"routes": [
-		{ "pattern": "legadosantanero.es", "custom_domain": true },
+		{ "pattern": "legadosantanero.es", "custom_domain": true, "previews_enabled": true },
 		{ "pattern": "www.legadosantanero.es", "custom_domain": true }
 	],
 	// Recipes and admin data
