@@ -1,14 +1,16 @@
 import { getEmDashCollection, type EmDashCollections } from 'emdash'
-import type { Recipe } from '../types'
+import type { Page, Recipe } from '../types'
 import { LOCALES, type Locale } from '../i18n'
 
-const segments: Record<Locale, { recipe: string; category: string }> = {
-	es: { recipe: 'receta', category: 'categoria' },
-	en: { recipe: 'recipe', category: 'category' }
+const segments: Record<Locale, { recipe: string; category: string; about: string }> = {
+	es: { recipe: 'receta', category: 'categoria', about: 'nosotros' },
+	en: { recipe: 'recipe', category: 'category', about: 'about' }
 }
 
 export const recipeSegment = (locale: Locale) => segments[locale].recipe
 export const categorySegment = (locale: Locale) => segments[locale].category
+/** URL of the About page: the `pages` entry with this slug must exist in EmDash */
+export const aboutUrl = (locale: Locale) => `/${locale}/${segments[locale].about}`
 export const categoryUrl = (locale: Locale, name: string) =>
 	`/${locale}/${categorySegment(locale)}/${encodeURIComponent(name)}`
 
@@ -46,11 +48,31 @@ export async function getRecipes(locale: Locale): Promise<Recipe[]> {
 	return entries.map((e) => toRecipe(e.data, locale))
 }
 
-/** Recipes of every locale, needed to link a page to its translations. */
-export const getAllRecipes = async () =>
+/** Published pages (About…) of a locale. */
+export async function getPages(locale: Locale): Promise<Page[]> {
+	const { entries, error } = await getEmDashCollection('pages', { locale, status: 'published' })
+	if (error) throw error
+	return entries.map(({ data: d }) => {
+		const slug = d.slug ?? d.id
+		const { translationGroup } = d as typeof d & { translationGroup?: string | null }
+		return {
+			title: d.title,
+			slug,
+			body: d.body ?? [],
+			url: `/${locale}/${slug}`,
+			translationGroup: translationGroup || d.id
+		}
+	})
+}
+
+/** Every locale's items, needed to link a page to its translations. */
+const byLocale = async <T>(get: (l: Locale) => Promise<T[]>) =>
 	Object.fromEntries(
-		await Promise.all(LOCALES.map(async (l) => [l, await getRecipes(l)] as const))
-	) as Record<Locale, Recipe[]>
+		await Promise.all(LOCALES.map(async (l) => [l, await get(l)] as const))
+	) as Record<Locale, T[]>
+
+export const getAllRecipes = () => byLocale(getRecipes)
+export const getAllPages = () => byLocale(getPages)
 
 /** Unique category names in order of first appearance. */
 export const getCategories = (recipes: Recipe[]): string[] => [
@@ -61,11 +83,14 @@ export const getCategories = (recipes: Recipe[]): string[] => [
 export const alternates = (urlFor: (l: Locale) => string | undefined) =>
 	Object.fromEntries(LOCALES.map((l) => [l, urlFor(l) ?? `/${l}`])) as Record<Locale, string>
 
-const translationOf = (all: Record<Locale, Recipe[]>, l: Locale, recipe?: Recipe) =>
-	recipe && all[l].find((r) => r.translationGroup === recipe.translationGroup)
+type Translatable = { url: string; translationGroup: string }
 
-export const recipeAlternates = (all: Record<Locale, Recipe[]>, recipe: Recipe) =>
-	alternates((l) => translationOf(all, l, recipe)?.url)
+const translationOf = <T extends Translatable>(all: Record<Locale, T[]>, l: Locale, item?: T) =>
+	item && all[l].find((r) => r.translationGroup === item.translationGroup)
+
+/** Alternates of a recipe or page, through its EmDash translation group. */
+export const translationAlternates = <T extends Translatable>(all: Record<Locale, T[]>, item: T) =>
+	alternates((l) => translationOf(all, l, item)?.url)
 
 /** A category's translation: same position in the categories of a translated recipe. */
 export function categoryAlternates(all: Record<Locale, Recipe[]>, locale: Locale, name: string) {

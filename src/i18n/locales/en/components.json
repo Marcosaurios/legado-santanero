@@ -13,13 +13,18 @@
 		"description": "Preparation",
 		"related": "More recipes like this"
 	},
+	"recipeFeature": {
+		"view": "View recipe",
+		"difficulty": "Difficulty"
+	},
 	"navbar": {
 		"title": "El legado Santanero",
 		"sections": {
 			"home": "Home",
 			"search": "Search",
 			"language": "Language",
-			"about": "About"
+			"about": "About",
+			"menu": "Menu"
 		}
 	},
 	"error": {
@@ -27,7 +32,8 @@
 	},
 	"templates": {
 		"landingPage": {
-			"lastRecipes": "Latest recipes added"
+			"lastRecipe": "Latest recipe added",
+			"discover": "Discover more"
 		}
 	}
 }

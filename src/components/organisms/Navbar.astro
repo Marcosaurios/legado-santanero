@@ -2,21 +2,31 @@
 import House from '~icons/fa7-solid/house'
 import Users from '~icons/fa7-solid/users'
 import Language from '~icons/fa7-solid/language'
-import SearchIcon from '~icons/fa7-solid/magnifying-glass'
+import Bars from '~icons/fa7-solid/bars'
 import Button from '../atoms/Button.astro'
 import InputBox from '../atoms/InputBox.astro'
 import LanguageDropdown from '../atoms/LanguageDropdown.astro'
+import Categories from '../molecules/Categories.astro'
 import { t, type Locale } from '../../i18n'
+import { aboutUrl } from '../../data/recipes'
+import type { Recipe } from '../../types'
 
 interface Props {
 	locale: Locale
 	alternates: Record<Locale, string>
+	recipes: Recipe[]
+	activeCategory?: string
 }
-const { locale, alternates } = Astro.props
+const { locale, alternates, recipes, activeCategory } = Astro.props
 const label = (section: string) => t(locale, `components.navbar.sections.${section}`)
 ---
 
 <nav>
+	<Button class="burger" aria-label={label('menu')} aria-expanded="false">
+		<span class="icon">
+			<Bars />
+		</span>
+	</Button>
 	<a class="title" href={`/${locale}`}>
 		<h1>{t(locale, 'components.navbar.title')}</h1>
 	</a>
@@ -26,7 +36,7 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 				<House />
 			</span>
 		</Button>
-		<Button href={`/${locale}/about`} label={label('about')} class="about">
+		<Button href={aboutUrl(locale)} label={label('about')} class="about">
 			<span class="icon">
 				<Users />
 			</span>
@@ -39,18 +49,10 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 				</span>
 			</Button>
 		</span>
-		<Button label={label('search')} class="search">
-			<span class="icon">
-				<SearchIcon />
-			</span>
-		</Button>
+		<Categories locale={locale} recipes={recipes} active={activeCategory} />
 
 		<span class="item desktopSearch">
-			<InputBox
-				id="search-input"
-				placeholder={t(locale, 'components.inputBox.placeholder')}
-				focusOnReveal
-			/>
+			<InputBox id="search-input" placeholder={t(locale, 'components.inputBox.placeholder')} />
 		</span>
 	</div>
 </nav>
@@ -59,76 +61,116 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 	const nav = document.querySelector('nav')!
 	const dropdown = nav.querySelector<HTMLElement>('.dropdown')!
 	const languageButton = nav.querySelector('.Button.language')!
-	const searchBar = nav.querySelector('.desktopSearch')!
-	const searchButton = nav.querySelector('.Button.search')!
+	const burger = nav.querySelector('.Button.burger')!
+	const sections = nav.querySelector('.sections')!
 
-	languageButton.addEventListener('click', () => (dropdown.hidden = !dropdown.hidden))
-	// Mobile: show/hide the searchbar when touching the search icon
-	searchButton.addEventListener('click', () => {
-		const shown = searchBar.classList.toggle('enabled')
-		if (shown) searchBar.querySelector<HTMLInputElement>('input[data-focus-on-reveal]')?.focus()
+	// Mobile: open/close the side menu
+	burger.addEventListener('click', () => {
+		burger.setAttribute('aria-expanded', String(sections.classList.toggle('open')))
 	})
+	languageButton.addEventListener('click', () => (dropdown.hidden = !dropdown.hidden))
 
-	// Click outside closes the dropdown and the mobile searchbar
+	// Click outside closes the dropdown and the side menu
 	document.addEventListener('click', (e) => {
 		const target = e.target as Node
+		if (!sections.contains(target) && !burger.contains(target)) {
+			sections.classList.remove('open')
+			burger.setAttribute('aria-expanded', 'false')
+		}
 		if (!dropdown.contains(target) && !languageButton.contains(target)) dropdown.hidden = true
-		if (!searchBar.contains(target) && !searchButton.contains(target))
-			searchBar.classList.remove('enabled')
 	})
 </script>
 
 <style lang="scss">
 	@use '../../styles/vars' as *;
 
-	nav {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		z-index: 100;
-	}
+	$headerHeight: 4rem;
 
-	.title {
+	// Mobile: top bar with burger on the left, sections slide in from the left
+	nav {
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
+		height: $headerHeight;
 		z-index: 100;
+		display: flex;
+		align-items: center;
 		background-color: $bgColor;
+	}
+
+	.title {
+		flex: 1;
 		text-decoration: none;
 		color: $fontColor;
-	}
-
-	.sections {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-around;
-		background-color: $bgColor;
-	}
-
-	.languageWrapper {
-		position: relative;
 	}
 
 	h1 {
 		text-align: center;
 		margin: 0;
 		padding: 1rem;
+		font-size: 1.5rem;
 	}
 
+	// No transform here: it would break the position: fixed children below
+	.sections {
+		position: fixed;
+		top: $headerHeight;
+		bottom: 0;
+		left: -100%;
+		width: min(75vw, 280px);
+		display: flex;
+		flex-direction: column;
+		background-color: $bgColor;
+		overflow-y: auto;
+		visibility: hidden;
+		transition:
+			left 0.2s ease-in-out,
+			visibility 0.2s;
+
+		&.open {
+			left: 0;
+			visibility: visible;
+		}
+
+		:global(.Button) {
+			flex-direction: row;
+			justify-content: flex-start;
+			gap: 1rem;
+		}
+
+		// Mobile: categories wrap inside the side menu
+		:global(.Categories) {
+			flex-wrap: wrap;
+			overflow: visible;
+		}
+	}
+
+	.languageWrapper {
+		position: relative;
+	}
+
+	// Mobile: search bar always visible at the bottom, outside the side menu
 	.desktopSearch {
-		position: absolute;
-		bottom: 100%;
+		position: fixed;
+		bottom: 0;
+		left: 0;
 		width: 100%;
-		height: 50px;
+		padding: 0.5rem 1rem;
+		box-sizing: border-box;
+		background-color: $bgColor;
+		visibility: visible;
 
-		// Mobile: slides up from the bottom bar when toggled
-		clip-path: inset(100% 0 0 0);
-		transition: clip-path 0.2s ease-in-out;
-
-		&.enabled {
-			clip-path: inset(0);
+		// Soft fade from the content into the bar
+		&::before {
+			content: '';
+			position: absolute;
+			bottom: 100%;
+			left: 0;
+			width: 100%;
+			height: 1.5rem;
+			background: linear-gradient(to top, $bgColor, transparent);
+			pointer-events: none;
 		}
 	}
 
@@ -136,30 +178,44 @@ const label = (section: string) => t(locale, `components.navbar.sections.${secti
 		// Desktop: one static row, title on the left and sections on the right
 		nav {
 			position: static;
-			display: flex;
+			height: auto;
 		}
 
-		.title {
-			position: static;
-			width: auto;
-			flex: 1;
+		h1 {
+			font-size: 2em;
 		}
 
 		.sections {
+			position: static;
+			width: auto;
 			flex: 1;
+			flex-direction: row;
+			justify-content: space-around;
 			align-items: center;
-			flex-wrap: nowrap;
 			gap: 10px;
+			visibility: visible;
+			transition: none;
+
+			:global(.Button) {
+				flex-direction: column;
+				gap: 3px;
+			}
 		}
 
 		.icon,
-		.sections :global(.Button.search) {
+		nav :global(.Button.burger),
+		.sections :global(.Categories) {
 			display: none;
 		}
 
 		.desktopSearch {
 			position: static;
-			clip-path: none;
+			width: auto;
+			padding: 0;
+
+			&::before {
+				display: none;
+			}
 		}
 	}
 </style>

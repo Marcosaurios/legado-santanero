@@ -21,7 +21,7 @@ const { currentLocale, alternates } = Astro.props
 
 	.dropdown {
 		position: absolute;
-		bottom: 100%;
+		top: 100%;
 		left: 50%;
 		transform: translateX(-50%);
 		z-index: 200;
@@ -35,11 +35,6 @@ const { currentLocale, alternates } = Astro.props
 
 		&[hidden] {
 			display: none;
-		}
-
-		@include desktopView() {
-			bottom: auto;
-			top: 100%;
 		}
 	}
 

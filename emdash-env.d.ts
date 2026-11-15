@@ -5,6 +5,20 @@
 
 import type { BylineSummary, ContentBylineCredit, TaxonomyTerm, PortableTextBlock } from "emdash";
 
+export interface Page {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  body: PortableTextBlock[];
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
 export interface Recipe {
   id: string;
   slug: string | null;
@@ -27,6 +41,7 @@ export interface Recipe {
 
 declare module "emdash" {
   interface EmDashCollections {
+    pages: Page;
     recipes: Recipe;
   }
 }

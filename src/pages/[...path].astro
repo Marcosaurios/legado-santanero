@@ -1,29 +1,36 @@
 ---
 // Every localised page, rendered per request from EmDash:
-//   /es, /es/receta/:slug, /es/categoria/:name and the /en equivalents
+//   /es, /es/receta/:slug, /es/categoria/:name, /es/:page and the /en equivalents
 import Layout from '../layouts/Layout.astro'
 import Recipe from '../components/molecules/Recipe.astro'
 import RecipePreviewList from '../components/molecules/RecipePreviewList.astro'
 import RecipesCategory from '../components/templates/RecipesCategory.astro'
 import LandingPage from '../components/templates/LandingPage.astro'
+import { PortableText } from 'emdash/ui'
 import { LOCALES, t, type Locale } from '../i18n'
 import {
 	alternates,
 	categoryAlternates,
 	categorySegment,
+	getAllPages,
 	getAllRecipes,
-	recipeAlternates,
-	recipeSegment
+	recipeSegment,
+	translationAlternates
 } from '../data/recipes'
 
 const [locale, segment, slug, ...rest] = (Astro.params.path ?? '').split('/') as [
 	Locale,
 	...string[]
 ]
-if (!LOCALES.includes(locale) || rest.length || (segment && !slug)) return Astro.rewrite('/404')
+if (!LOCALES.includes(locale) || rest.length) return Astro.rewrite('/404')
 
 const all = await getAllRecipes()
 const recipes = all[locale]
+
+// /:locale/:page → a `pages` entry (About…)
+const allPages = segment && !slug ? await getAllPages() : undefined
+const page = allPages?.[locale].find((p) => p.slug === segment)
+if (allPages && !page) return Astro.rewrite('/404')
 
 const recipe = segment === recipeSegment(locale) ? recipes.find((r) => r.slug === slug) : undefined
 // ponytail: first 3 sharing any category; add ranking/shuffle if the catalogue grows
@@ -35,14 +42,26 @@ const related = recipe
 const category = segment === categorySegment(locale) ? slug : undefined
 const items = category ? recipes.filter((r) => r.category.includes(category)) : []
 
-if (segment && !recipe && !items.length) return Astro.rewrite('/404')
+if (segment && !page && !recipe && !items.length) return Astro.rewrite('/404')
 ---
 
-{recipe ? (
+{page && allPages ? (
 	<Layout
 		locale={locale}
 		recipes={recipes}
-		alternates={recipeAlternates(all, recipe)}
+		alternates={translationAlternates(allPages, page)}
+		title={page.title}
+	>
+		<h1>{page.title}</h1>
+		<div class="md">
+			<PortableText value={page.body} />
+		</div>
+	</Layout>
+) : recipe ? (
+	<Layout
+		locale={locale}
+		recipes={recipes}
+		alternates={translationAlternates(all, recipe)}
 		title={recipe.title}
 		activeCategory={recipe.category[0]}
 	>
