@@ -1,0 +1,223 @@
+---
+// Large preview of a single recipe, used for the latest recipe in the landing
+import { Image } from 'emdash/ui'
+import Clock from '~icons/fa7-solid/clock'
+import ArrowRight from '~icons/fa7-solid/arrow-right'
+import type { Recipe } from '../../types'
+import { t, type Locale } from '../../i18n'
+import { formatDuration } from '../utils'
+
+interface Props {
+	recipe: Recipe
+	locale: Locale
+}
+const { recipe, locale } = Astro.props
+const label = (key: string) => t(locale, `components.recipeFeature.${key}`)
+
+// First paragraph of the instructions as plain text
+const firstBlock = recipe.description.find((b) => b._type === 'block')
+const excerpt = ((firstBlock?.children ?? []) as { text?: string }[]).map((c) => c.text).join('')
+---
+
+<a href={recipe.url} class="RecipeFeature">
+	<Image image={recipe.imageMain} alt="" />
+
+	<div class="content">
+		<ul class="categories">
+			{recipe.category.map((c) => (
+				<li>{c}</li>
+			))}
+		</ul>
+
+		<span class="title">{recipe.title}</span>
+
+		<div class="meta">
+			{recipe.minutes && (
+				<span class="time">
+					<Clock />
+					{formatDuration(recipe.minutes)}
+				</span>
+			)}
+			{recipe.difficulty && (
+				<span
+					class="difficulty"
+					aria-label={`${label('difficulty')}: ${recipe.difficulty}/5`}
+					title={`${label('difficulty')}: ${recipe.difficulty}/5`}
+				>
+					{[1, 2, 3, 4, 5].map((n) => (
+						<i class:list={{ on: n <= recipe.difficulty! }} />
+					))}
+				</span>
+			)}
+		</div>
+
+		{excerpt && <p class="excerpt">{excerpt}</p>}
+
+		<span class="cta">
+			{label('view')}
+			<ArrowRight />
+		</span>
+	</div>
+</a>
+
+<style lang="scss">
+	@use '../../styles/vars' as *;
+
+	.RecipeFeature {
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+		display: flex;
+		align-items: flex-end;
+		height: 24rem;
+		border-radius: 14px;
+
+		color: $fontColor;
+		text-decoration: none;
+		line-height: 1.3;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+		// Desktop: the landing stretches it to the height of its column
+		@include desktopView() {
+			height: auto;
+			min-height: 26rem;
+		}
+	}
+
+	// Rendered by EmDash's Image (child component), hence :global
+	.RecipeFeature :global(img) {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: saturate(0.85);
+		transition:
+			transform 0.6s ease,
+			filter 0.6s ease;
+	}
+
+	// Darkens the bottom so the text reads on any photo
+	.RecipeFeature::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: linear-gradient(
+			to top,
+			rgba($bgColor, 0.95) 0%,
+			rgba($bgColor, 0.6) 45%,
+			transparent 75%
+		);
+	}
+
+	.RecipeFeature:hover :global(img) {
+		transform: scale(1.06);
+		filter: none;
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		width: 100%;
+		padding: 1.25rem;
+
+		@include desktopView() {
+			padding: 2rem;
+			max-width: 38rem;
+		}
+	}
+
+	.categories {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			padding: 0.1rem 0.7rem;
+			border: 1px solid rgba($fontColor, 0.5);
+			border-radius: 999px;
+			font-size: 0.7rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			backdrop-filter: blur(4px);
+		}
+	}
+
+	.title {
+		font-size: 2rem;
+		font-weight: 700;
+		line-height: 1.1;
+		text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+
+		@include desktopView() {
+			font-size: 2.6rem;
+		}
+	}
+
+	.meta {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+		font-size: 0.9rem;
+	}
+
+	.time {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	.difficulty {
+		display: flex;
+		gap: 4px;
+
+		i {
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			border: 1px solid $fontColor;
+
+			&.on {
+				background-color: $fontColor;
+			}
+		}
+	}
+
+	.excerpt {
+		margin: 0;
+		font-size: 0.9rem;
+		opacity: 0.85;
+
+		// Two lines max
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-top: 0.25rem;
+		font-size: 0.85rem;
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+
+		:global(svg) {
+			transition: transform 0.3s ease;
+		}
+	}
+
+	.RecipeFeature:hover .cta :global(svg) {
+		transform: translateX(4px);
+	}
+</style>

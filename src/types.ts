@@ -1,5 +1,14 @@
 import type { MediaValue, PortableTextBlock } from 'emdash'
 
+/** Static page (About…) from the EmDash `pages` collection, served at /:locale/:slug */
+export type Page = {
+	title: string
+	slug: string
+	body: PortableTextBlock[]
+	url: string
+	translationGroup: string
+}
+
 export type Recipe = {
 	title: string
 	slug: string

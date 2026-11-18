@@ -1,11 +1,59 @@
 ---
-import RecipePreview from '../molecules/RecipePreview.astro'
+import RecipeFeature from '../molecules/RecipeFeature.astro'
+import RecipePreviewList from '../molecules/RecipePreviewList.astro'
+import { pickFromDistinctCategories } from '../utils'
 import { t, type Locale } from '../../i18n'
 import type { Recipe } from '../../types'
 
 const { locale, recipes } = Astro.props as { locale: Locale; recipes: Recipe[] }
+const label = (key: string) => t(locale, `components.templates.landingPage.${key}`)
+// Recipes come oldest first
 const lastRecipe = recipes.at(-1)
+const random = pickFromDistinctCategories(recipes, 3, lastRecipe && [lastRecipe])
 ---
 
-<div>{t(locale, 'components.templates.landingPage.lastRecipes')}</div>
-{lastRecipe && <RecipePreview recipe={lastRecipe} />}
+<div class="LandingPage">
+	{lastRecipe && (
+		<section class="latest">
+			<h2>{label('lastRecipe')}</h2>
+			<RecipeFeature recipe={lastRecipe} locale={locale} />
+		</section>
+	)}
+	{random.length > 0 && (
+		<section class="random">
+			<h2>{label('discover')}</h2>
+			<RecipePreviewList items={random} />
+		</section>
+	)}
+</div>
+
+<style lang="scss">
+	@use '../../styles/vars' as *;
+
+	@include desktopView() {
+		// Desktop: latest recipe on the left, the random ones stacked on the right
+		.LandingPage {
+			display: grid;
+			grid-template-columns: 2fr 1fr;
+			gap: 2rem;
+		}
+
+		.random :global(.link) {
+			height: 8rem;
+		}
+
+		// The feature card fills the row, as tall as the right column
+		.latest {
+			display: flex;
+			flex-direction: column;
+
+			:global(.RecipeFeature) {
+				flex: 1;
+			}
+		}
+
+		.random :global(li) {
+			margin: 0;
+		}
+	}
+</style>

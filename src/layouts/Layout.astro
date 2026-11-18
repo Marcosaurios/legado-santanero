@@ -32,7 +32,12 @@ const siteTitle = t(locale, 'components.navbar.title')
 		<title>{title ? `${title} | ${siteTitle}` : siteTitle}</title>
 	</head>
 	<body>
-		<Navbar locale={locale} alternates={alternates} />
+		<Navbar
+			locale={locale}
+			alternates={alternates}
+			recipes={recipes}
+			activeCategory={activeCategory}
+		/>
 		<main>
 			<Categories locale={locale} recipes={recipes} active={activeCategory} />
 			<SearchList locale={locale} recipes={recipes} />
@@ -47,10 +52,25 @@ const siteTitle = t(locale, 'components.navbar.title')
 	@use '../styles/vars' as *;
 
 	main {
-		padding: 4rem 1rem 5rem 1rem;
+		transition: filter 0.2s ease-in-out;
+		padding: 4rem 1rem 4rem 1rem;
 
 		@include desktopView() {
 			padding: 0 1rem 1rem 1rem;
+		}
+	}
+
+	// Dim the page while the Navbar side menu is open
+	body:has(:global(.sections.open)) main {
+		filter: brightness(0.4);
+	}
+
+	// Mobile: categories live in the Navbar side menu
+	main > :global(.Categories) {
+		display: none;
+
+		@include desktopView() {
+			display: flex;
 		}
 	}
 </style>

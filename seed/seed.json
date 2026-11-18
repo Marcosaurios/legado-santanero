@@ -105,6 +105,27 @@
 					}
 				}
 			]
+		},
+		{
+			"slug": "pages",
+			"label": "Páginas",
+			"labelSingular": "Página",
+			"urlPattern": "/es/{slug}",
+			"supports": ["drafts", "revisions", "preview"],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Título",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "body",
+					"label": "Contenido",
+					"type": "portableText",
+					"required": true
+				}
+			]
 		}
 	],
 	"content": {
@@ -414,6 +435,59 @@
 					}
 				},
 				"translationOf": "arroz-es"
+			}
+		],
+		"pages": [
+			{
+				"id": "about-es",
+				"slug": "nosotros",
+				"status": "published",
+				"locale": "es",
+				"data": {
+					"title": "Nosotros",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "p1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "ps1",
+									"text": "Recetas de familia, de las de siempre.",
+									"marks": []
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"id": "about-en",
+				"slug": "about",
+				"status": "published",
+				"locale": "en",
+				"translationOf": "about-es",
+				"data": {
+					"title": "About",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "p2",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "ps2",
+									"text": "Family recipes, the ones we have always made.",
+									"marks": []
+								}
+							]
+						}
+					]
+				}
 			}
 		]
 	}
